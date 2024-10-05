@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import * as Font from 'expo-font';
+import { useState, useEffect } from 'react';
+import Navigation from './Navigation';
 
 export default function App() {
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  const loadFonts = async () => {
+    await Font.loadAsync({
+      'Montserrat-Regular': require('./assets/Fonts/Montserrat-Regular.ttf'),
+      'Montserrat-Bold': require('./assets/Fonts/Montserrat-Bold.ttf'),
+      'Montserrat-Light': require('./assets/Fonts/Montserrat-Light.ttf')
+    });
+    setFontsLoaded(true);
+  };
+
+  useEffect(() => {
+    loadFonts();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Navigation />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
