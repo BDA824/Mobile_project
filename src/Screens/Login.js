@@ -3,25 +3,27 @@ import { ImageBackground } from 'react-native-web';
 import { TextInput, Button } from 'react-native-paper';
 import { useState } from 'react';
 
-export default function Login() {
+import Menu from './Menu';
+
+export default function Login({navigation}) {
 
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
   return (
     <View>
-      <ImageBackground source={require('../../assets/Images/Font_Page1.jpg')} />
+      {/* <ImageBackground source={require('../../assets/Images/Font_Page1.jpg')} /> */}
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerTxt}>Esteban-quito</Text>
           <Button
-              mode='text'
-              onPress={() => console.log('Pressed')}
-              rippleColor='#271B66'
-              textColor='white'
-            >
-              Sign up
-            </Button>
+            mode='text'
+            onPress={() => console.log('Pressed')}
+            rippleColor='#271B66'
+            textColor='white'
+          >
+            Sign up
+          </Button>
         </View>
         <View style={styles.content}>
           <Text style={styles.tittle}>Login</Text>
@@ -34,6 +36,7 @@ export default function Login() {
             theme={{ colors: { text: 'black', primary: 'black' } }}
           />
           <TextInput
+            style={styles.username}
             label="Password"
             value={password}
             onChangeText={pass => setPassword(pass)}
@@ -44,7 +47,7 @@ export default function Login() {
           <View style={styles.btn}>
             <Button
               mode='text'
-              onPress={() => console.log('Pressed')}
+              onPress={() => navigation.navigate('Home')}
               rippleColor='#271B66'
               textColor='black'
             >
@@ -82,7 +85,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   username: {
-    marginBottom: 10
+    marginBottom: 10,
+    width: 275
   },
   headerTxt: {
     fontFamily: 'Montserrat-Light',
