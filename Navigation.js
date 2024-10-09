@@ -14,6 +14,7 @@ import MoveMoney from "./src/Screens/MoveMoney";
 import Profile from "./src/Screens/Profile";
 import Loan from "./src/Screens/Loan";
 import Transactions from "./src/Screens/Transactions";
+import History from "./src/Screens/History";
 
 const TabNav = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -41,6 +42,15 @@ function InfoTransactions() {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Transactions" component={Transactions} />
+        </Stack.Navigator>
+    );
+}
+
+function FinancialHistory() {
+    
+    return (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="History" component={History} />
         </Stack.Navigator>
     );
 }
@@ -73,6 +83,11 @@ function RoutingTabs() {
             <TabNav.Screen
                 name="Info transactions"
                 component={InfoTransactions}
+                options={{ tabBarButton: () => null, headerShown: false, }}
+            />
+            <TabNav.Screen
+                name="Financial history"
+                component={FinancialHistory}
                 options={{ tabBarButton: () => null, headerShown: false, }}
             />
         </TabNav.Navigator>

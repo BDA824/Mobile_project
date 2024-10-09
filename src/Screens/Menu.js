@@ -7,7 +7,7 @@ export default function Menu({ navigation }) {
         <View>
             <Header />
             <View style={{
-                height: 55, 
+                height: 55,
                 borderTopWidth: 2,
                 borderTopColor: 'black',
                 marginLeft: 12,
@@ -18,7 +18,10 @@ export default function Menu({ navigation }) {
                     <Text style={{ fontFamily: 'Montserrat-Regular' }}>Saving Account {'\n'} +57 3028561243</Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', paddingRight: 35 }}>
-                    <Text style={{ fontFamily: 'Montserrat-Bold' }}>Balance {'\n'} $ 758,256</Text>
+                    <Text
+                        style={{ fontFamily: 'Montserrat-Bold' }}
+                        onPress={() => navigation.navigate('Financial history')}
+                    >Balance {'\n'} $ 758,256</Text>
                 </View>
             </View>
             <View style={styles.buttons}>
