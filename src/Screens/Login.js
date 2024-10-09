@@ -1,9 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { ImageBackground } from 'react-native-web';
 import { TextInput, Button } from 'react-native-paper';
 import { useState } from 'react';
 
-import Menu from './Menu';
 
 export default function Login({navigation}) {
 
@@ -18,7 +16,7 @@ export default function Login({navigation}) {
           <Text style={styles.headerTxt}>Esteban-quito</Text>
           <Button
             mode='text'
-            onPress={() => console.log('Pressed')}
+            onPress={() => navigation.navigate('Register')}
             rippleColor='#271B66'
             textColor='white'
           >

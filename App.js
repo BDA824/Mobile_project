@@ -11,7 +11,9 @@ export default function App() {
     await Font.loadAsync({
       'Montserrat-Regular': require('./assets/Fonts/Montserrat-Regular.ttf'),
       'Montserrat-Bold': require('./assets/Fonts/Montserrat-Bold.ttf'),
-      'Montserrat-Light': require('./assets/Fonts/Montserrat-Light.ttf')
+      'Montserrat-Light': require('./assets/Fonts/Montserrat-Light.ttf'),
+      'Roboto-Thin': require('./assets/Fonts/Roboto-Thin.ttf'),
+      'Roboto-Regular': require('./assets/Fonts/Roboto-Regular.ttf')
     });
     setFontsLoaded(true);
   };
