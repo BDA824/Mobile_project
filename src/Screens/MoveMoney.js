@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useState } from 'react'
 import { TextInput, Button } from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
+import Header from "../Components/Header";
 
 export default function MoveMoney() {
 
@@ -11,6 +12,7 @@ export default function MoveMoney() {
 
     return (
         <View style={styles.container}>
+            <Header />
             <View style={styles.header}>
                 <Text style={{
                     fontFamily: 'Montserrat-Light',
@@ -62,12 +64,12 @@ const styles = StyleSheet.create({
         flexDirection: 'column'
     },
     header: {
-        height: 125,
+        height: 100,
         alignItems: 'center',
         justifyContent: 'center'
     },
     form: {
-        height: 350,
+        height: 250,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

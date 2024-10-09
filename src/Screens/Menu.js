@@ -1,25 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Button, IconButton } from "react-native-paper";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Header from "../Components/Header";
 
 export default function Menu({ navigation }) {
     return (
         <View>
-            <View style={styles.header}>
-                <Text
-                    style={{ fontFamily: 'Montserrat-Bold', fontSize: 14, color: '#ffffff' }} >
-                    Esteban-quito
-                </Text>
-                <Text
-                    style={{ color: '#ffffff', fontFamily: 'Montserrat-Light' }} >
-                    Welcome, {'\n'} Andres
-                </Text>
-                <IconButton
-                    icon={require('../../assets/Icons/Logout.svg')}
-                    size={35}
-                    onPress={() => navigation.navigate('Login')}
-                />
-            </View>
+            <Header />
             <View style={{
                 height: 55, 
                 borderTopWidth: 2,
@@ -41,12 +27,14 @@ export default function Menu({ navigation }) {
                     contentStyle={{ flexDirection: 'row-reverse' }}
                     buttonColor='#271B66'
                     mode='contained'
+                    onPress={() => navigation.navigate('Apply loan')}
                 >Apply for loan</Button>
                 <Button
                     icon={require('../../assets/Icons/Transaction.svg')}
                     contentStyle={{ flexDirection: 'row-reverse' }}
                     buttonColor='#271B66'
                     mode='contained'
+                    onPress={() => navigation.navigate('Info transactions')}
                 >Transactions</Button>
             </View>
         </View>
@@ -57,17 +45,6 @@ const styles = StyleSheet.create({
     container: {
         display: 'flex',
         flexDirection: 'column'
-    },
-    header: {
-        height: 125,
-        backgroundColor: '#271B66',
-        marginBottom: 65,
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10
     },
     information: {
         height: 165,
