@@ -1,12 +1,52 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { useState } from 'react';
+import { loginUser } from '../Request';
+import { useUser } from '../UserContext';
 
 
-export default function Login({navigation}) {
+
+export default function Login({ navigation }) {
 
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const { setUserId } = useUser();
+
+  const [incorrectPass, setIncorrectPass] = useState(false);
+  const [incorrectUser, setIncorrectUser] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async () => {
+    try {
+      const data = {
+        username: username,
+        password: password,
+      }
+
+      const response = await loginUser(data)
+      const userData = response.data.user.id
+      setUserId(userData)
+      setSuccess(true)
+      setTimeout(() => {
+        navigation.navigate('Main', {screen: 'Home', params: { userID: userData }});
+      }, 3000);
+    } catch (error) {
+      if (error.response.status === 404)
+        setIncorrectUser(true)
+        setTimeout(() => {
+          setIncorrectUser(false)
+          setUserName("");
+          setPassword("");
+        }, 3000);
+      if (error.response.status == 400)
+        setIncorrectPass(true)
+        setTimeout(() => {
+          setIncorrectPass(false)
+          setUserName("");
+          setPassword("");
+        }, 3000);
+    }
+  }
 
   return (
     <View>
@@ -42,10 +82,12 @@ export default function Login({navigation}) {
             mode='outlined'
             theme={{ colors: { text: 'black', primary: 'black' } }}
           />
+          {incorrectPass && <Text style={{ color: 'red', marginTop: 5, fontFamily: 'Montserrat-Bold' }}>Password invalid</Text>}
+          {incorrectUser && <Text style={{ color: 'red', marginTop: 5, fontFamily: 'Montserrat-Bold' }}>Username invalid</Text>}
           <View style={styles.btn}>
             <Button
               mode='text'
-              onPress={() => navigation.navigate('Home')}
+              onPress={handleSubmit}
               rippleColor='#271B66'
               textColor='black'
             >

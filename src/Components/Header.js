@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import { IconButton } from 'react-native-paper'
 
-export default function Header() {
+export default function Header({ name }) {
     return (
         <View style={styles.header}>
             <Text
@@ -10,7 +10,7 @@ export default function Header() {
             </Text>
             <Text
                 style={{ color: '#ffffff', fontFamily: 'Montserrat-Light' }} >
-                Welcome, {'\n'} Andres
+                Welcome, {'\n'} {name}
             </Text>
             <IconButton
                 icon={require('../../assets/Icons/Logout.svg')}

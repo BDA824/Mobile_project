@@ -1,11 +1,32 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Button, IconButton } from "react-native-paper";
 import Header from "../Components/Header";
+import { useEffect, useState } from "react";
+import { searchUser } from "../Request";
+import { useUser } from '../UserContext';
 
-export default function Menu({ navigation }) {
+export default function Menu({ route, navigation }) {
+
+    const [name, setName] = useState('')
+    const [phone, setPhone] = useState('')
+    const [balance, setBalance] = useState('')
+    const { userId } = useUser();
+    const { userID } = route.params;
+    useEffect(async () => {
+        try {
+            const response = await searchUser(userID)
+            console.log(userID);
+            const data = response.data
+            setName(data.name)
+            setPhone(data.phone)
+            setBalance(data.balance)
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, [userID]);
     return (
         <View>
-            <Header />
+            <Header name={name} />
             <View style={{
                 height: 55,
                 borderTopWidth: 2,
@@ -15,13 +36,13 @@ export default function Menu({ navigation }) {
             }}></View>
             <View style={styles.information}>
                 <View style={{ paddingTop: 15 }}>
-                    <Text style={{ fontFamily: 'Montserrat-Regular' }}>Saving Account {'\n'} +57 3028561243</Text>
+                    <Text style={{ fontFamily: 'Montserrat-Regular' }}>Saving Account {'\n'} {phone}</Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', paddingRight: 35 }}>
                     <Text
                         style={{ fontFamily: 'Montserrat-Bold' }}
                         onPress={() => navigation.navigate('Financial history')}
-                    >Balance {'\n'} $ 758,256</Text>
+                    >Balance {'\n'} $ {balance}</Text>
                 </View>
             </View>
             <View style={styles.buttons}>

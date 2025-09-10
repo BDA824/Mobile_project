@@ -1,23 +1,38 @@
 import { StyleSheet, View, Text, ScrollView } from "react-native";
 import CardTransaction from "../Components/CardTransaction";
 import Header from "../Components/Header";
+import { useUser } from "../UserContext";
+import { searchUser } from "../Request";
+import { useEffect, useState } from "react";
+import { transactionForUser } from "../Request";
 
 export default function Transactions() {
+
+    const [name, setName] = useState('');
+    const { userId } = useUser();
+    const [transactions, setTransactions] = useState([]);
+    useEffect(async () => {
+        try {
+            const response = await searchUser(userId)
+            const responses = await transactionForUser(userId)
+            const data = response.data
+            setName(data.name)
+            setTransactions(responses.data)
+            console.log(transactions)
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, []);
     return (
         <View style={styles.container}>
-            <Header />
+            <Header name={name}/>
             <View style={styles.header}>
                 <Text style={styles.tittle}>How you've moved your money</Text>
             </View>
             <ScrollView style={styles.transactions}>
-                <CardTransaction id={1} type={'transaction'} value={25.855} balance={800.952} />
-                <CardTransaction id={2} type={'transaction'} value={25.855} balance={800.952} />
-                <CardTransaction id={3} type={'transaction'} value={25.855} balance={800.952} />
-                <CardTransaction id={4} type={'transaction'} value={25.855} balance={800.952} />
-                <CardTransaction id={5} type={'transaction'} value={25.855} balance={800.952} />
-                <CardTransaction id={6} type={'transaction'} value={25.855} balance={800.952} />
-                <CardTransaction id={7} type={'transaction'} value={25.855} balance={800.952} />
-                <CardTransaction id={8} type={'transaction'} value={25.855} balance={800.952} />
+                {transactions.map(transaction => (
+                    <CardTransaction id={transaction.id} type={transaction.type_transaction} value={transaction.amount} balance={"---"}/>
+                ))}
             </ScrollView>
         </View>
     )

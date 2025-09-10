@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { UserProvider } from "./src/UserContext";
 
 import Login from "./src/Screens/Login";
 import Menu from "./src/Screens/Menu";
@@ -20,7 +21,7 @@ const TabNav = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 function ApplyLoanS() {
-    
+
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Loan" component={ApplyLoan} />
@@ -29,7 +30,7 @@ function ApplyLoanS() {
 }
 
 function InfoLoan() {
-    
+
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Info loan" component={Loan} />
@@ -38,7 +39,7 @@ function InfoLoan() {
 }
 
 function InfoTransactions() {
-    
+
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Transactions" component={Transactions} />
@@ -47,7 +48,7 @@ function InfoTransactions() {
 }
 
 function FinancialHistory() {
-    
+
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="History" component={History} />
@@ -97,12 +98,14 @@ function RoutingTabs() {
 export default function Navigation() {
 
     return (
-        <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name='Login' component={Login} />
-                <Stack.Screen name='Register' component={Register} />
-                <Stack.Screen name='Home' component={RoutingTabs} />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <UserProvider>
+            <NavigationContainer>
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name='Login' component={Login} />
+                    <Stack.Screen name='Register' component={Register} />
+                    <Stack.Screen name='Main' component={RoutingTabs} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </UserProvider>
     )
 }

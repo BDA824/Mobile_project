@@ -2,18 +2,54 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { useState } from 'react'
 import { Picker } from '@react-native-picker/picker';
+import { registerUser } from "../Request";
 
-export default function Register() {
+export default function Register({navigation}) {
 
-    const [identification, setIdentification] = useState('');
-    const [name, setName] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setIPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [address, setAddress] = useState('');
-    const [type, setType] = useState('');
+    const [identification, setIdentification] = useState(0); //Integer
+    const [name, setName] = useState(''); //String
+    const [username, setUsername] = useState(''); //String
+    const [password, setIPassword] = useState(''); //String
+    const [mail, setMail] = useState(''); //Email
+    const [phone, setPhone] = useState(0); //Integer
+    const [address, setAddress] = useState(''); //String
+    const [type_account, setType_account] = useState(''); //String
 
+    const [error, setError] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const handleSubmit = async () =>{
+        try{
+            const data = {
+                identification: identification,
+                name: name,
+                username: username,
+                password: password,
+                mail: mail,
+                phone: phone,
+                address:address,
+                type_account: type_account
+            }
+            const response = await registerUser(data)
+            setSuccess(true)
+            setTimeout(() => {
+                navigation.navigate('Login')
+              }, 3000);
+        } catch (error) {
+            if (error.response.status === 409)
+                setError(true);
+                setTimeout(() => {
+                    setError(false); // Ocultamos el error después de 3 segundos
+                    setIdentification(0);
+                    setName('');
+                    setUsername('');
+                    setIPassword('');
+                    setMail('');
+                    setPhone('');
+                    setAddress('');
+                    setType_account('')
+                  }, 3000);
+        }
+    }
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -49,8 +85,8 @@ export default function Register() {
                     <TextInput
                         style={styles.txtinput}
                         label="Email"
-                        value={email}
-                        onChangeText={mail => setEmail(mail)}
+                        value={mail}
+                        onChangeText={mail => setMail(mail)}
                     ></TextInput>
                     <TextInput
                         style={styles.txtinput}
@@ -69,13 +105,13 @@ export default function Register() {
                             fontFamily: 'Roboto-Regular', width: 275,
                             fontSize: 18, marginTop: 15, borderWidth: 0, backgroundColor: 'transparent'
                         }}
-                        selectedValue={type}
+                        selectedValue={type_account}
                         onValueChange={(itemValue, itemIndex) =>
-                            setType(itemValue)
+                            setType_account(itemValue)
                         }>
                         <Picker.Item label="Type of account" value="" enabled={false} color='gray' />
-                        <Picker.Item label="Saving account" value="java" />
-                        <Picker.Item label="Currently account" value="js" />
+                        <Picker.Item label="Saving account" value="Saving account" />
+                        <Picker.Item label="Currently account" value="Currently account" />
                     </Picker>
                 </View>
             </ScrollView>
@@ -84,7 +120,10 @@ export default function Register() {
                     buttonColor='#271B66'
                     mode='contained'
                     style={{width: 125}}
+                    onPress={handleSubmit}
                 >Sign up</Button>
+            {error && <Text style={{ color: 'red', marginTop: 5, fontFamily: 'Montserrat-Bold' }}>This user is already registered</Text>}
+            {success && <Text style={{ color: 'green', marginTop: 5, fontFamily: 'Montserrat-Bold' }}>Registration has been successful</Text>}
             </View>
             <View style={styles.footer}>
                 <Text style={{

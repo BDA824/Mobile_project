@@ -1,13 +1,30 @@
 import { View, StyleSheet, Text } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { useState } from 'react'
+import { searchInfoLoan } from "../Request";
+import { useEffect } from "react";
+import { useUser } from "../UserContext";
 
-export default function Profile() {
+export default function Loan({ route }) {
 
-    const [state, setState] = useState('');
-    const [totalDebt, setTotalDebt] = useState('');
+    const [state, setState] = useState('Pending');
+    const [datePay, setDatePay] = useState('');
     const [quotaValue, setQuotaValue] = useState('');
     const [pendingFees, setPendingFees] = useState('');
+    const { id_pay } = useUser();
+
+
+    useEffect(async () => {
+        try {
+            const response = await searchInfoLoan(id_pay)
+            console.log(response.data)
+            setDatePay(response.data.date_pay)
+            setQuotaValue(response.data.amount)
+            setPendingFees(response.data.number_quota)
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -26,9 +43,9 @@ export default function Profile() {
                 ></TextInput>
                 <TextInput
                     style={styles.txtinput}
-                    label="Total debt"
-                    value={totalDebt}
-                    onChangeText={debt => setTotalDebt(debt)}
+                    label="Date pay"
+                    value={datePay}
+                    onChangeText={debt => setDatePay(debt)}
                 ></TextInput>
                 <TextInput
                     style={styles.txtinput}

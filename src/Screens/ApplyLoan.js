@@ -2,14 +2,55 @@ import { StyleSheet, View, Text } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { useState } from 'react'
 import { Picker } from "@react-native-picker/picker";
+import { useUser } from "../UserContext";
+import { searchUser } from "../Request";
+import { useEffect } from "react";
+import { applyLoan } from "../Request";
 
 export default function ApplyLoan() {
 
-    const [amount, setAmount] = useState('');
-    const [dedline, setDedline] = useState('');
+    const [amount, setAmount] = useState(0);
+    const [dedline, setDedline] = useState(0);
     const [type, setType] = useState('');
-    const [incomesMonthly, setIncomesMonthly] = useState('');
-    const [expensesMonthly, setExpensesMonthly] = useState('');
+    const [incomesMonthly, setIncomesMonthly] = useState(0);
+    const [expensesMonthly, setExpensesMonthly] = useState(0);
+
+    const { userId } = useUser();
+    const [success, setSuccess] = useState(false);
+
+    useEffect(async () => {
+        try {
+            const response = await searchUser(userId)
+            const data = response.data
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, []);
+
+    const handleSubmit = async () => {
+        try {
+          const data = {
+            identification: userId,
+            type_loan: type,
+            dedline: dedline,
+            amount: amount,
+            incomes_monthly: incomesMonthly,
+            expenses_monthly: expensesMonthly
+          }
+          const response = await applyLoan(data)
+          setSuccess(true)
+          setTimeout(() => {
+            setSuccess(false)
+            setType('');
+            setAmount(0);
+            setDedline('')
+            setIncomesMonthly('')
+            setExpensesMonthly('')
+          }, 3000);
+        } catch (error) {
+          console.log(error)
+        }
+      }
 
     return (
         <View style={styles.container}>
@@ -61,6 +102,7 @@ export default function ApplyLoan() {
                     buttonColor='#271B66'
                     mode='contained'
                     style={{ width: 145 }}
+                    onPress={handleSubmit}
                 >Send request</Button>
             </View>
         </View>

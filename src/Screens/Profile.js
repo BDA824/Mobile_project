@@ -1,6 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useState } from 'react'
 import { TextInput, Button } from "react-native-paper";
+import { useEffect } from "react";
+import { useUser } from "../UserContext";
+import { searchUser } from "../Request";
 
 export default function Profile() {
 
@@ -9,6 +12,23 @@ export default function Profile() {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+    const { userId } = useUser();
+
+    useEffect(async () => {
+        try {
+            const response = await searchUser(userId)
+            console.log(response.data);
+            const data = response.data
+            
+            setIdentification(data.identification)
+            setName(data.name)
+            setEmail(data.mail)
+            setPhone(data.phone)
+            setAddress(data.address)
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, []);
 
     return (
         <View style={styles.container}>

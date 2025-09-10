@@ -3,16 +3,66 @@ import { useState } from 'react'
 import { TextInput, Button } from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
 import Header from "../Components/Header";
+import { useUser } from "../UserContext";
+import { searchUser } from "../Request";
+import { useEffect } from "react";
+import { makeTransaction } from "../Request";
 
-export default function MoveMoney() {
+export default function MoveMoney({ navigation }) {
 
     const [type, setType] = useState('')
-    const [transactionAmount, setTransactionAmount] = useState('')
+    const [transactionAmount, setTransactionAmount] = useState(0)
     const [targetAccount, setTargetAccount] = useState('')
+    const [name, setName] = useState('');
+    const { userId } = useUser();
+
+    const [responses, setResponse] = useState({});
+    const [success, setSuccess] = useState(false);
+    const [founds, setFounds] = useState(false);
+    useEffect(async () => {
+        try {
+            const response = await searchUser(userId)
+            const data = response.data
+            setResponse(data)
+            setName(data.name)
+            navigation.navigate('Main', {screen: 'Home', params: {userId: userId}})
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, []);
+
+    const handleSubmit = async () => {
+        try {
+          const data = {
+            id: responses.id,
+            phone: responses.phone,
+            type_transaction: type,
+            amount: transactionAmount,
+            target_account: targetAccount
+          }
+          const response = await makeTransaction(data)
+          setSuccess(true)
+          setTimeout(() => {
+            setSuccess(false)
+            setType('');
+            setTransactionAmount(0);
+            setTargetAccount('')
+          }, 3000);
+        } catch (error) {
+          if (error.response.status == 400)
+            setFounds(true)
+            setTimeout(() => {
+                setFounds(false)
+                setType('');
+                setTransactionAmount(0);
+                setTargetAccount('')
+            }, 3000);
+        }
+      }
 
     return (
         <View style={styles.container}>
-            <Header />
+            <Header name={name}/>
             <View style={styles.header}>
                 <Text style={{
                     fontFamily: 'Montserrat-Light',
@@ -30,9 +80,9 @@ export default function MoveMoney() {
                         setType(itemValue)
                     }>
                     <Picker.Item label="Type of transaction" value="" enabled={false} color='gray' />
-                    <Picker.Item label="Deposit" value="deposit" />
-                    <Picker.Item label="Transfer" value="transfer" />
-                    <Picker.Item label="Withdrawn" value="withdrawn" />
+                    <Picker.Item label="Deposit" value="Deposit" />
+                    <Picker.Item label="Transfer" value="Transfer" />
+                    <Picker.Item label="Withdrawal" value="Withdrawal" />
                 </Picker>
                 <TextInput
                     style={styles.txtinput}
@@ -46,12 +96,15 @@ export default function MoveMoney() {
                     value={targetAccount}
                     onChangeText={target => setTargetAccount(target)}
                 ></TextInput>
+                {success && <Text style={{ color: 'green', marginTop: 5, fontFamily: 'Montserrat-Bold' }}>The transaction was successfully completed </Text>}
+                {founds && <Text style={{ color: 'red', marginTop: 5, fontFamily: 'Montserrat-Bold' }}>insufficient funds</Text>}
             </View>
             <View style={styles.bottom}>
             <Button
                     buttonColor='#271B66'
                     mode='contained'
                     style={{ width: 145 }}
+                    onPress={handleSubmit}
                 >Move money</Button>
             </View>
         </View>

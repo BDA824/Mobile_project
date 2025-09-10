@@ -2,23 +2,58 @@ import React, { useState } from 'react';
 import { View, Button, Text, StyleSheet } from 'react-native';
 import Header from '../Components/Header';
 import { Picker } from "@react-native-picker/picker";
+import { useUser } from "../UserContext";
+import { searchHistory, searchUser, loanForUser } from "../Request";
+import { useEffect } from "react";
 
 export default function History({ navigation }) {
 
     const [selectedValue, setSelectedValue] = useState('');
+    const [name, setName] = useState('');
+    const { userId } = useUser();
+    const [datas, setData] = useState({})
+    const [incomes, setIncomes] = useState(0)
+    const [expenses, setExpenses] = useState(0)
+    const [Loans, setLoans] = useState([])
+    const { setIdPay } = useUser();
+
+    useEffect(async () => {
+        try {
+            const response = await searchUser(userId)
+            const data = response.data
+            setName(data.name)
+
+            const identification = {
+                identification: data.identification
+            }
+
+            const history = await searchHistory(identification)
+            console.log(history.data)
+            setIncomes(history.data.incomes_monthly)
+            setExpenses(history.data.expenses_monthly)
+
+            const loans = await loanForUser(data.id)
+            setLoans(loans.data)
+            console.log(Loans)
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, []);
 
     const handleValueChange = (value) => {
         setSelectedValue(value);
-        if (value === 'prueba1') {
-          navigation.navigate('Info loan');
-        } else if (value === 'prueba2') {
-          navigation.navigate('Info transactions');
-        }
-      };
+        console.log(value);
+        setIdPay(value)
+        navigation.navigate('Info loan')
+        // navigation.navigate('Main', {
+        //     screen: 'Info loan',
+        //     params: { id_pay: value },
+        //   });
+    };
 
     return (
         <View style={styles.container}>
-            <Header />
+            <Header name={name} />
             <View style={styles.header}>
                 <Text style={{
                     fontFamily: 'Montserrat-Light',
@@ -33,10 +68,10 @@ export default function History({ navigation }) {
                         fontSize: 22,
                         color: '#FFFFFF',
                         marginBottom: 25
-                    }}>Total incomes <Text style={{ color: 'green' }}>$ 1,596,000</Text></Text>
+                    }}>Total incomes <Text style={{ color: 'green' }}>{incomes}</Text></Text>
                 </View>
                 <View>
-                    <Text style={styles.message}>Total expenses <Text style={{ color: 'red' }}>$ 855,000</Text></Text>
+                    <Text style={styles.message}>Total expenses <Text style={{ color: 'red' }}>{expenses}</Text></Text>
                 </View>
             </View>
             <View style={{
@@ -53,8 +88,13 @@ export default function History({ navigation }) {
                     onValueChange={handleValueChange}
                 >
                     <Picker.Item label="Loans actives" value="" enabled={false} color='gray' />
-                    <Picker.Item label="Prueba 1" value="prueba1" />
-                    <Picker.Item label="Prueba 2" value="prueba2" />
+                    {Loans.map((item) => (
+                        <Picker.Item
+                            key={item.id} // Usar un identificador único
+                            label={item.amount} // Usar el atributo 'name' como label
+                            value={item.id_payment}   // Usar 'id' como valor del picker
+                        />
+                    ))}
                 </Picker>
             </View>
         </View>
